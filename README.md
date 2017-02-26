@@ -39,13 +39,9 @@ in the address bar. Leave App ID and Password blank. Hit connect and you can now
 [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Contributors
-# Contributors <br>
 [JaeYeon Kim](http://www.github.com/erickimme) <br>
 [Ram Gupta](http://www.github.com/Ram-G) <br> 
 [Yong Jin Kim](http://www.github.com/whyjay17) <br>
 [Samrat Nalla](http://www.github.com/samrattennis) <br>
-# Special thanks to
+## Special thanks to
 [Kevin Leung](http://www.github.com/KSLHacks)
-
-
-## License 
