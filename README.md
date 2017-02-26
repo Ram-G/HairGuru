@@ -31,6 +31,7 @@ in the address bar. Leave App ID and Password blank. Hit connect and you can now
 
 ## Related Links
 
+[Facebook Page](http://www.facebook.com/HairGuru-193298187820692) <br>
 [Website URL](http://www.hairguru2017.com) <br>
 [Website Github](http://github.com/erickimme/hairguru_website) <br>
 [Initial Version Github](http://github.com/erickimme/HackIllinois2017)
