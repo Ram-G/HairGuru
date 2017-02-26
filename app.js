@@ -49,7 +49,7 @@ dialog.matches('greeting', [
 
 dialog.matches('reservation', [
   function (session, args, next) {
-    session.send('Which day would you like to make the reservation?')
+    session.send('Which day would you like to make the reservation for?')
 //    calendarAPI.listEventsAPI();
   }
 ])
@@ -57,12 +57,6 @@ dialog.matches('reservation', [
 dialog.matches('location', [
   function (session, args, next) {
     session.send('Our address is 201 N Goodwin Ave, Urbana, IL 61801.');
-  }
-])
-
-dialog.matches('pricing', [
-  function (session, args, next) {
-    session.send('Haircut is $10. Other treatments\' prices vary.');
   }
 ])
 
