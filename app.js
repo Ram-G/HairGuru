@@ -1,3 +1,5 @@
+
+require('dotenv').config()
 var fs = require('fs');
 var restify = require('restify');
 var builder = require('botbuilder');
