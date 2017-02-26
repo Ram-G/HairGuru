@@ -37,7 +37,7 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
 var TOKEN_PATH = TOKEN_DIR + 'calendar-nodejs-quickstart.json';
 
 // Load client secrets from a local file.
-function listEventsAPI() {
+function listEventsAPI(callback) {
   fs.readFile('client_secret.json', function processClientSecrets(err, content) {
     if (err) {
       console.log('Error loading client secret file: ' + err);
@@ -45,7 +45,7 @@ function listEventsAPI() {
     }
     // Authorize a client with the loaded credentials, then call the
     // Google Calendar API.
-    authorize(JSON.parse(content), listEvents);
+    authorize(JSON.parse(content), listEvents, callback);
   });
 }
 // listEventsAPI();
@@ -57,7 +57,7 @@ function listEventsAPI() {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback) {
+function authorize(credentials, callback, callback2) {
   var clientSecret = credentials.installed.client_secret;
   var clientId = credentials.installed.client_id;
   var redirectUrl = credentials.installed.redirect_uris[0];
@@ -70,7 +70,7 @@ function authorize(credentials, callback) {
       getNewToken(oauth2Client, callback);
     } else {
       oauth2Client.credentials = JSON.parse(token);
-      callback(oauth2Client);
+      callback(oauth2Client, callback2);
     }
   });
 }
@@ -129,7 +129,8 @@ function storeToken(token) {
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-function listEvents(auth) {
+function listEvents(auth, callback2) {
+  var ret = []
   var calendar = google.calendar('v3');
   calendar.events.list({
     auth: auth,
@@ -147,19 +148,22 @@ function listEvents(auth) {
     if (events.length == 0) {
       console.log('No upcoming events found.');
     } else {
+      callback2(events);
+/*
       console.log('Upcoming 10 events:');
       for (var i = 0; i < events.length; i++) {
         var event = events[i];
         var start = event.start.dateTime || event.start.date;
         console.log('%s - %s', start, event.summary);
       }
+*/
     }
   });
 }
 
 
 module.exports = {
-  listEventsAPI: function() {
-    return listEventsAPI();
+  listEventsAPI: function(callback) {
+    return listEventsAPI(callback);
   }
 }

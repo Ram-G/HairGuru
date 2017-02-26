@@ -35,6 +35,7 @@ bot.dialog('/', dialog);
 // Bots Dialogs
 //=========================================================
 
+
 dialog.matches('None', [
   function (session, args, next) {   
     session.send('I\'m sorry, I didn\'t understand..')
@@ -49,27 +50,17 @@ dialog.matches('greeting', [
 
 dialog.matches('reservation', [
   function (session, args, next) {
-    builder.Prompts.text(session, 'Which day would you like to make the reservation for?');
+    builder.Prompts.time(session, 'Which day would you like to make the reservation for?');
+  }, function (session, results) {
+    session.userData.giventime = results.response;
+    session.send("We're at second dialogue! You said " + builder.EntityRecognizer.resolveTime([results.response]));
+    calendarAPI.listEventsAPI(function(events) {
+      for (e of events) {
+        console.log(Date.parse(e.start.dateTime));
+      }
+    });
 
-    // Thursday or 2/25 or February 25
-      // we chceck calander to see if we have open slot
-
-  }, function (session, results, next) {
-    session.userData.day = results.response;
-    session.send("We're at second dialogue! You said " + results.response);
-
-    var date = builder.EntityRecognizer.findEntity(args.entities, 'builtin.datetime.date');
-    session.send("The day you gave was " + date);
   }
-/*
-    if (!date) {
-        builder.Prompts.text(session, "What would you like to call the task?");
-    } else {
-        session.end("Great! We're going to make a reservation for " + date)
-        next({ response: task.entity });
-
-    }
-    */
 ])
 
 dialog.matches('location', [
