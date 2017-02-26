@@ -35,21 +35,39 @@ bot.dialog('/', dialog);
 // Bots Dialogs
 //=========================================================
 
-dialog.matches('greeting', [
-  function (session, args, next) {
-    session.send('Welcome to HairGuru!')
-  }
-])
-
 dialog.matches('None', [
   function (session, args, next) {
     session.send('I\'m sorry, I didn\'t understand..')
   }
 ])
 
+dialog.matches('greeting', [
+  function (session, args, next) {
+    session.send('Welcome to HairGuru! Would you like to make a reservation for a haircut?')
+  }
+])
+
 dialog.matches('reservation', [
   function (session, args, next) {
-    session.send('So you want to make a reservation')
+    session.send('Which day would you like to make the reservation?')
 //    calendarAPI.listEventsAPI();
+  }
+])
+
+dialog.matches('location', [
+  function (session, args, next) {
+    session.send('Our address is 201 N Goodwin Ave, Urbana, IL 61801.');
+  }
+])
+
+dialog.matches('pricing', [
+  function (session, args, next) {
+    session.send('Haircut is $10. Other treatments\' prices vary.');
+  }
+])
+
+dialog.matches('pricing', [
+  function (session, args, next) {
+    session.send('Haircut is $10. Other treatments\' prices vary.');
   }
 ])
