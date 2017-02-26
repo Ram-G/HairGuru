@@ -31,7 +31,7 @@ function writeUserData(userId, name, email, imageUrl) {
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/calendar-nodejs-quickstart.json
-var SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
+var SCOPES = ['https://www.googleapis.com/auth/calendar.readonly', 'https://www.googleapis.com/auth/calendar'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'calendar-nodejs-quickstart.json';
@@ -48,7 +48,20 @@ function listEventsAPI(callback) {
     authorize(JSON.parse(content), listEvents, callback);
   });
 }
-// listEventsAPI();
+
+var date = {};
+function createEventAPI(d, callback) {
+    fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+    if (err) {
+      console.log('Error loading client secret file: ' + err);
+      return;
+    }
+    // Authorize a client with the loaded credentials, then call the
+    // Google Calendar API.
+    date = d;
+    authorize(JSON.parse(content), createEvent, callback);
+  });
+}
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -129,8 +142,7 @@ function storeToken(token) {
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-function listEvents(auth, callback2) {
-  var ret = []
+function listEvents(auth, callback) {
   var calendar = google.calendar('v3');
   calendar.events.list({
     auth: auth,
@@ -148,7 +160,7 @@ function listEvents(auth, callback2) {
     if (events.length == 0) {
       console.log('No upcoming events found.');
     } else {
-      callback2(events);
+      callback(events);
 /*
       console.log('Upcoming 10 events:');
       for (var i = 0; i < events.length; i++) {
@@ -161,9 +173,40 @@ function listEvents(auth, callback2) {
   });
 }
 
+function createEvent(auth, callback) {
+  var endDate = new Date(date.getTime());
+  endDate.setHours(endDate.getHours() + 1);
+  var event = {
+    'start': {
+      'dateTime': date.toISOString(),
+      'timeZone': 'America/Los_Angeles',
+    },
+    'end': {
+      'dateTime': endDate.toISOString(),
+      'timeZone': 'America/Los_Angeles',
+    }
+  };
+
+  var calendar = google.calendar('v3');
+  calendar.events.insert({
+    auth: auth,
+    calendarId: '0hesfvge0tkqs9904qfia945ns@group.calendar.google.com',
+    resource: event,
+  }, function(err, event) {
+    if (err) {
+      console.log('There was an error contacting the Calendar service: ' + err);
+      return;
+    }
+    callback();
+  });
+}
+
 
 module.exports = {
   listEventsAPI: function(callback) {
     return listEventsAPI(callback);
+  },
+  createEventAPI: function(date, callback) {
+    return createEventAPI(date, callback);
   }
 }

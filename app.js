@@ -6,6 +6,15 @@ var builder = require('botbuilder');
 
 var calendarAPI = require('./quickstart.js');
 
+var hours = {
+  beginTime: 10,
+  endTime: 19,
+  beginDay: 1,
+  endDay: 5
+}
+var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+
 // env('/.env');
 //=========================================================
 // Bot Setup
@@ -36,6 +45,7 @@ bot.dialog('/', dialog);
 //=========================================================
 
 
+
 dialog.matches('None', [
   function (session, args, next) {   
     session.send('I\'m sorry, I didn\'t understand..')
@@ -51,15 +61,39 @@ dialog.matches('greeting', [
 dialog.matches('reservation', [
   function (session, args, next) {
     builder.Prompts.time(session, 'Which day would you like to make the reservation for?');
-  }, function (session, results) {
-    session.userData.giventime = results.response;
-    session.send("We're at second dialogue! You said " + builder.EntityRecognizer.resolveTime([results.response]));
+  }, function (session, results, next) {
+    var inputDate = builder.EntityRecognizer.resolveTime([results.response]);
+    session.userData.date = inputDate;
+    session.send("The date you gave was " + inputDate);
     calendarAPI.listEventsAPI(function(events) {
+      var na = {};
       for (e of events) {
-        console.log(Date.parse(e.start.dateTime));
+        var currDate = new Date(e.start.dateTime);
+        if (currDate.getDay() >= hours.beginDay && currDate.getDay() <= hours.endDay &&
+            inputDate.getDate() === currDate.getDate() &&
+            inputDate.getDay() === currDate.getDay() &&
+            inputDate.getFullYear() === currDate.getFullYear()) {
+          na[currDate.getHours()] = true;
+        }
       }
-    });
 
+      var avble = {};
+      for (var i = hours.beginTime; i <= hours.endTime; i++) {
+        if (na[i] === undefined) {
+          avble[i.toString() + "00 hrs"] = i;
+        }
+      }
+
+      session.userData.avble = avble;
+      builder.Prompts.choice(session, "These are the available timeslots on " +  
+        days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble);
+    });
+  }, function (session, results) {
+    var reservedDate = new Date(session.userData.date);
+    reservedDate.setHours(session.userData.avble[results.response.entity]);
+    calendarAPI.createEventAPI(reservedDate, function() {
+      session.send("Congratulations! Your reservation has been made for " + reservedDate);
+    });
   }
 ])
 
