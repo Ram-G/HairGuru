@@ -6,15 +6,15 @@ var googleAuth = require('google-auth-library');
 // FireBase setup
 var firebase = require('firebase');
 
-// Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyAxylt6M3T3bVfJiXPrpW_n4Cws-6BTf3s",
-    authDomain: "hairguru-159817.firebaseapp.com",
-    databaseURL: "https://hairguru-159817.firebaseio.com",
-    storageBucket: "hairguru-159817.appspot.com",
-    messagingSenderId: "187057722076"
-  };
-  firebase.initializeApp(config);
+// Initialize Firebase -- CURRENTLY NOT USED
+var config = {
+  apiKey: "AIzaSyAxylt6M3T3bVfJiXPrpW_n4Cws-6BTf3s",
+  authDomain: "hairguru-159817.firebaseapp.com",
+  databaseURL: "https://hairguru-159817.firebaseio.com",
+  storageBucket: "hairguru-159817.appspot.com",
+  messagingSenderId: "187057722076"
+};
+firebase.initializeApp(config);
 
 // Get a reference to the database service
 var database = firebase.database();
@@ -27,7 +27,6 @@ function writeUserData(userId, name, email, imageUrl) {
   });
 }
 
-// writeUserData("ram1234", "ram", "ram@uiui.edu");
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/calendar-nodejs-quickstart.json
@@ -161,14 +160,6 @@ function listEvents(auth, callback) {
       console.log('No upcoming events found.');
     } else {
       callback(events);
-/*
-      console.log('Upcoming 10 events:');
-      for (var i = 0; i < events.length; i++) {
-        var event = events[i];
-        var start = event.start.dateTime || event.start.date;
-        console.log('%s - %s', start, event.summary);
-      }
-*/
     }
   });
 }
@@ -200,7 +191,6 @@ function createEvent(auth, callback) {
     callback();
   });
 }
-
 
 module.exports = {
   listEventsAPI: function(callback) {

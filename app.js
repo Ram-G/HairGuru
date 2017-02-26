@@ -1,4 +1,3 @@
-
 require('dotenv').config()
 var fs = require('fs');
 var restify = require('restify');
@@ -14,8 +13,6 @@ var hours = {
 }
 var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-
-// env('/.env');
 //=========================================================
 // Bot Setup
 //=========================================================
@@ -44,8 +41,6 @@ bot.dialog('/', dialog);
 // Bots Dialogs
 //=========================================================
 
-
-
 dialog.matches('None', [
   function (session, args, next) {   
     session.send('I\'m sorry, I didn\'t understand..')
@@ -60,11 +55,16 @@ dialog.matches('greeting', [
 
 dialog.matches('reservation', [
   function (session, args, next) {
+    // begin reservation process
     builder.Prompts.time(session, 'Which day would you like to make the reservation for?');
   }, function (session, results, next) {
+    // get user's preferred day, and get available timeslots on that day
     var inputDate = builder.EntityRecognizer.resolveTime([results.response]);
     session.userData.date = inputDate;
     session.send("The date you gave was " + inputDate);
+
+    // make a call to Google Calendar API. The anonymous function passed in is triggered as a callback
+    // after the events variable has been populated from Google Calendar.
     calendarAPI.listEventsAPI(function(events) {
       var na = {};
       for (e of events) {
@@ -83,7 +83,6 @@ dialog.matches('reservation', [
           avble[i.toString() + "00 hrs"] = i;
         }
       }
-
       session.userData.avble = avble;
 
       // give the user choice of available timeslot
@@ -91,8 +90,11 @@ dialog.matches('reservation', [
         days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble, {listStyle:3});
     });
   }, function (session, results) {
+    // create an event in the Google Calendar for user's chosen timeslot.
     var reservedDate = new Date(session.userData.date);
     reservedDate.setHours(session.userData.avble[results.response.entity]);
+
+    // Google Calendar API call similar to listEvents
     calendarAPI.createEventAPI(reservedDate, function() {
       session.send("Congratulations! Your reservation has been made for " + reservedDate);
     });
