@@ -85,8 +85,10 @@ dialog.matches('reservation', [
       }
 
       session.userData.avble = avble;
+
+      // give the user choice of available timeslot
       builder.Prompts.choice(session, "These are the available timeslots on " +  
-        days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble);
+        days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble, {listStyle:3});
     });
   }, function (session, results) {
     var reservedDate = new Date(session.userData.date);
