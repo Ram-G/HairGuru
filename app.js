@@ -4,7 +4,7 @@ var builder = require('botbuilder');
 
 var calendarAPI = require('./quickstart.js');
 
-env('/.env');
+// env('/.env');
 //=========================================================
 // Bot Setup
 //=========================================================
