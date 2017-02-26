@@ -115,7 +115,7 @@ bot.dialog('/reservation',  [
       var avble = {};
       for (var i = hours.beginTime; i <= hours.endTime; i++) {
         if (na[i] === undefined) {
-          avble[i.toString() + "00 hrs"] = i;
+          avble[i.toString() + ":00 "] = i;
         }
       }
       session.userData.avble = avble;
@@ -193,7 +193,7 @@ dialog.matches('location', [
 
 dialog.matches('pricing', [
   function (session, args, next) {
-    session.send('Haircut is $10. Other treatments\' prices vary.');
+    session.send('Available Services & Price\n * Women\'s Short Hair - $25\n * Women\'s Long Hair - $28\n * Men\'s Hair - $22\n * Children\'s Hair - $15\n * Color - $45+\n * Perm - $55+\n * Facial Waxing - $25+\n * Shampoo - $5');
   }
 ])
 
