@@ -47,6 +47,6 @@ dialog.matches('None', [
 dialog.matches('reservation', [
   function (session, args, next) {
     session.send('So you want to make a reservation')
-    calendarAPI.listEventsAPI();
+//    calendarAPI.listEventsAPI();
   }
 ])
