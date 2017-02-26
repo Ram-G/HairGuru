@@ -48,15 +48,99 @@ dialog.matches('None', [
 ])
 
 dialog.matches('greeting', [
+  function (session) {
+    builder.Prompts.choice(
+      session,
+      'Welcome to HairGuru! Would you like to make a reservation for a haircut?',
+      "Yes|No",
+      {listStyle:3},
+      {
+        maxRetries:2,
+        retryPrompt: 'That is not a valid option'
+      });
+  },
+
+  function(session, result){
+    if(!result.response){
+            session.send('Ooops! Too many attemps 😞 But don\'t worry, I\'m handling that exception and you can try again!');
+            return session.endDialog();
+    }
+
+            session.on('error', function (err) {
+            session.send('Failed with message: %s', err.message);
+            session.endDialog();
+        });
+
+    var selection = result.response.entity;
+
+    switch(selection){
+      case "Yes":
+        session.beginDialog('/reservation');
+
+        break;
+      case "No":
+        session.send('If you have any question, feel free to ask!');
+        session.endDialog();
+    }
+
+    }
+  
+  
+]);
+
+bot.dialog('/reservation',  [
   function (session, args, next) {
-    session.send('Welcome to HairGuru! Would you like to make a reservation for a haircut?')
+    // begin reservation process
+    builder.Prompts.time(session, 'Which day would you like to make the reservation for? (Mon~Sun)');
+  }, function (session, results, next) {
+    // get user's preferred day, and get available timeslots on that day
+    var inputDate = builder.EntityRecognizer.resolveTime([results.response]);
+    session.userData.date = inputDate;
+    session.send("The date you gave was " + inputDate);
+
+    // make a call to Google Calendar API. The anonymous function passed in is triggered as a callback
+    // after the events variable has been populated from Google Calendar.
+    calendarAPI.listEventsAPI(function(events) {
+      var na = {};
+      for (e of events) {
+        var currDate = new Date(e.start.dateTime);
+        if (currDate.getDay() >= hours.beginDay && currDate.getDay() <= hours.endDay &&
+            inputDate.getDate() === currDate.getDate() &&
+            inputDate.getDay() === currDate.getDay() &&
+            inputDate.getFullYear() === currDate.getFullYear()) {
+          na[currDate.getHours()] = true;
+        }
+      }
+
+      var avble = {};
+      for (var i = hours.beginTime; i <= hours.endTime; i++) {
+        if (na[i] === undefined) {
+          avble[i.toString() + "00 hrs"] = i;
+        }
+      }
+      session.userData.avble = avble;
+
+      // give the user choice of available timeslot
+      builder.Prompts.choice(session, "These are the available timeslots on " +  
+        days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble, {listStyle:3});
+    });
+  }, function (session, results) {
+    // create an event in the Google Calendar for user's chosen timeslot.
+    var reservedDate = new Date(session.userData.date);
+    reservedDate.setHours(session.userData.avble[results.response.entity]);
+
+    // Google Calendar API call similar to listEvents
+    calendarAPI.createEventAPI(reservedDate, function() {
+      session.send("Congratulations! Your reservation has been made for " + reservedDate);
+    });
   }
 ])
+
 
 dialog.matches('reservation', [
   function (session, args, next) {
     // begin reservation process
-    builder.Prompts.time(session, 'Which day would you like to make the reservation for?');
+    builder.Prompts.time(session, 'Which day would you like to make the reservation for? (Mon~Sun)');
   }, function (session, results, next) {
     // get user's preferred day, and get available timeslots on that day
     var inputDate = builder.EntityRecognizer.resolveTime([results.response]);
@@ -112,3 +196,22 @@ dialog.matches('pricing', [
     session.send('Haircut is $10. Other treatments\' prices vary.');
   }
 ])
+
+/* Newly Added Intents */
+
+
+dialog.matches('swear', [
+  function (session, args, next) {
+        session.send('Please use appropriate language');
+        session.endDialog();
+  }
+])
+
+dialog.matches('exit', [
+  function (session, args, next) {
+        session.send('Please comeback again!');
+        session.endDialog();
+  }
+])
+
+
