@@ -29,7 +29,23 @@ in the address bar. Leave App ID and Password blank. Hit connect and you can now
   	npm install
 ```
 
+## Related Links
+
+[Website URL](http://www.hairguru2017.com)
+[Website Github](http://github.com/erickimme/hairguru_website)
+[Initial Version Github](http://github.com/erickimme/HackIllinois2017)
+
 ## Contributor Guide
 [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Contributors
+# Contributors <br>
+[JaeYeon Kim](http://www.github.com/erickimme) <br>
+[Ram Gupta](http://www.github.com/Ram-G) <br> 
+[Yong Jin Kim](http://www.github.com/whyjay17) <br>
+[Samrat Nalla](http://www.github.com/samrattennis) <br>
+# Special thanks to
+[Kevin Leung](http://www.github.com/KSLHacks)
+
 
 ## License 
