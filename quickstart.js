@@ -168,6 +168,7 @@ function createEvent(auth, callback) {
   var endDate = new Date(date.getTime());
   endDate.setHours(endDate.getHours() + 1);
   var event = {
+    'summary': 'XYZ Barber appointment',
     'start': {
       'dateTime': date.toISOString(),
       'timeZone': 'America/Los_Angeles',
