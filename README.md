@@ -6,12 +6,12 @@ Barbers build up loyal followings over time. They are also frequently very busy.
 * Allows customers to make reservations for barbershop appointments
 * Provides basic information such as hours of operation, directions to the shop, and pricing
 
-## USAGE
+## Usage
 
 To run the app:
 
 ```
-	node app.js
+node app.js
 ```
 
 You will need to install the Bot Framework Emulator from [here](https://docs.botframework.com/en-us/tools/bot-framework-emulator/).
@@ -22,17 +22,22 @@ http://localhost:3978/api/messages
 ```
 in the address bar. Leave App ID and Password blank. Hit connect and you can now chat with the chatbot!
 
-## BUILD/INSTALLATION INSTRUCTIONS
-  * All platforms
+## Build/Installation instructions
+  * All platforms: run
 
 ```
-  	npm install
+npm install
+```
+You can then run the app using
+```
+node app.js
 ```
 
 ## Related Links
 
-[Website URL](http://www.hairguru2017.com)
-[Website Github](http://github.com/erickimme/hairguru_website)
+[Facebook Page](http://www.facebook.com/HairGuru-193298187820692) <br>
+[Website URL](http://www.hairguru2017.com) <br>
+[Website Github](http://github.com/erickimme/hairguru_website) <br>
 [Initial Version Github](http://github.com/erickimme/HackIllinois2017)
 
 ## Contributor Guide
