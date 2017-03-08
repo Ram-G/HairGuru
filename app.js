@@ -44,6 +44,7 @@ bot.dialog('/', dialog);
 dialog.matches('None', [
   function (session, args, next) {   
     session.send('I\'m sorry, I didn\'t understand..')
+    session.endDialog();
   }
 ])
 
@@ -94,13 +95,16 @@ bot.dialog('/reservation',  [
     builder.Prompts.time(session, 'Which day would you like to make the reservation for? (Mon~Sun)');
   }, function (session, results, next) {
     // get user's preferred day, and get available timeslots on that day
+    if(results.response.toString() == "quit"){
+      session.send("The date you gave was ");
+    }
     var inputDate = builder.EntityRecognizer.resolveTime([results.response]);
     session.userData.date = inputDate;
     session.send("The date you gave was " + inputDate);
 
     // make a call to Google Calendar API. The anonymous function passed in is triggered as a callback
     // after the events variable has been populated from Google Calendar.
-    calendarAPI.listEventsAPI(function(events) {
+calendarAPI.listEventsAPI(function(events) {
       var na = {};
       for (e of events) {
         var currDate = new Date(e.start.dateTime);
@@ -115,16 +119,18 @@ bot.dialog('/reservation',  [
       var avble = {};
       for (var i = hours.beginTime; i <= hours.endTime; i++) {
         if (na[i] === undefined) {
-          avble[i.toString() + ":00 "] = i;
+          avble[i.toString() + ":00"] = i;
         }
       }
       session.userData.avble = avble;
+
 
       // give the user choice of available timeslot
       builder.Prompts.choice(session, "These are the available timeslots on " +  
         days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble, {listStyle:3});
     });
   }, function (session, results) {
+
     // create an event in the Google Calendar for user's chosen timeslot.
     var reservedDate = new Date(session.userData.date);
     reservedDate.setHours(session.userData.avble[results.response.entity]);
@@ -132,6 +138,7 @@ bot.dialog('/reservation',  [
     // Google Calendar API call similar to listEvents
     calendarAPI.createEventAPI(reservedDate, function() {
       session.send("Congratulations! Your reservation has been made for " + reservedDate);
+      session.endDialog(); //always need to end dialog to refresh the convo
     });
   }
 ])
@@ -164,7 +171,7 @@ dialog.matches('reservation', [
       var avble = {};
       for (var i = hours.beginTime; i <= hours.endTime; i++) {
         if (na[i] === undefined) {
-          avble[i.toString() + "00 hrs"] = i;
+          avble[i.toString() + ":00"] = i;
         }
       }
       session.userData.avble = avble;
@@ -181,6 +188,7 @@ dialog.matches('reservation', [
     // Google Calendar API call similar to listEvents
     calendarAPI.createEventAPI(reservedDate, function() {
       session.send("Congratulations! Your reservation has been made for " + reservedDate);
+      session.endDialog();//
     });
   }
 ])
@@ -194,6 +202,7 @@ dialog.matches('location', [
 dialog.matches('pricing', [
   function (session, args, next) {
     session.send('Available Services & Price\n * Women\'s Short Hair - $25\n * Women\'s Long Hair - $28\n * Men\'s Hair - $22\n * Children\'s Hair - $15\n * Color - $45+\n * Perm - $55+\n * Facial Waxing - $25+\n * Shampoo - $5');
+    session.endDialog();
   }
 ])
 
