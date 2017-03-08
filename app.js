@@ -41,6 +41,16 @@ bot.dialog('/', dialog);
 // Bots Dialogs
 //=========================================================
 
+bot.dialog('reset', function (session) {
+    // reset data
+    session.endConversation("Please comeback again!");
+}).triggerAction({ matches: /^exit/i }); 
+
+bot.dialog('bye', function (session) {
+    // reset data
+    session.endConversation("Please comeback again!");
+}).triggerAction({ matches: /^quit/i }); 
+
 dialog.matches('None', [
   function (session, args, next) {   
     session.send('I\'m sorry, I didn\'t understand..')
@@ -95,9 +105,7 @@ bot.dialog('/reservation',  [
     builder.Prompts.time(session, 'Which day would you like to make the reservation for? (Mon~Sun)');
   }, function (session, results, next) {
     // get user's preferred day, and get available timeslots on that day
-    if(results.response.toString() == "quit"){
-      session.send("The date you gave was ");
-    }
+
     var inputDate = builder.EntityRecognizer.resolveTime([results.response]);
     session.userData.date = inputDate;
     session.send("The date you gave was " + inputDate);
