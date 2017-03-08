@@ -44,6 +44,16 @@ bot.dialog('/', dialog);
 
 //quit anytime //
 
+bot.dialog('reset', function (session) {
+    // reset data
+    session.endConversation("Please comeback again!");
+}).triggerAction({ matches: /^exit/i }); 
+
+bot.dialog('bye', function (session) {
+    // reset data
+    session.endConversation("Please comeback again!");
+}).triggerAction({ matches: /^quit/i }); 
+
 
 //
 
