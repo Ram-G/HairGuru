@@ -41,6 +41,9 @@ bot.dialog('/', dialog);
 // Bots Dialogs
 //=========================================================
 
+
+//quit anytime 
+
 bot.dialog('reset', function (session) {
     // reset data
     session.endConversation("Please comeback again!");
@@ -50,6 +53,8 @@ bot.dialog('bye', function (session) {
     // reset data
     session.endConversation("Please comeback again!");
 }).triggerAction({ matches: /^quit/i }); 
+
+//
 
 dialog.matches('None', [
   function (session, args, next) {   
