@@ -42,7 +42,7 @@ bot.dialog('/', dialog);
 //=========================================================
 
 
-//quit anytime 
+//quit anytime //
 
 bot.dialog('reset', function (session) {
     // reset data
