@@ -3,6 +3,7 @@ var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 
+var calendarId = '9og0pboev8t3hpush344u1e1tk@group.calendar.google.com'
 // FireBase setup
 var firebase = require('firebase');
 
@@ -145,7 +146,7 @@ function listEvents(auth, callback) {
   var calendar = google.calendar('v3');
   calendar.events.list({
     auth: auth,
-    calendarId: '0hesfvge0tkqs9904qfia945ns@group.calendar.google.com',
+    calendarId: calendarId,
     timeMin: (new Date()).toISOString(),
     maxResults: 10,
     singleEvents: true,
@@ -156,6 +157,7 @@ function listEvents(auth, callback) {
       return;
     }
     var events = response.items;
+    console.log(events)
     if (events.length == 0) {
       console.log('No upcoming events found.');
     } else {
@@ -182,7 +184,7 @@ function createEvent(auth, callback) {
   var calendar = google.calendar('v3');
   calendar.events.insert({
     auth: auth,
-    calendarId: '0hesfvge0tkqs9904qfia945ns@group.calendar.google.com',
+    calendarId: calendarId,
     resource: event,
   }, function(err, event) {
     if (err) {
