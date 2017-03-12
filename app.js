@@ -47,13 +47,30 @@ bot.dialog('/', dialog);
 bot.dialog('reset', function (session) {
     // reset data
     session.endConversation("Please comeback again!");
-}).triggerAction({ matches: /^exit/i }); 
+}).triggerAction({ matches: /^(exit|quit|bye)/i }); 
 
-bot.dialog('bye', function (session) {
+
+bot.dialog('price2', function (session) {
     // reset data
-    session.endConversation("Please comeback again!");
-}).triggerAction({ matches: /^quit/i }); 
+      
+    session.endConversation('Available Services & Price\n * Women\'s Short Hair - $25\n * Women\'s Long Hair - $28\n * Men\'s Hair - $22\n * Children\'s Hair - $15\n * Color - $45+\n * Perm - $55+\n * Facial Waxing - $25+\n * Shampoo - $5');
+    session.endDialog();
+ 
+}).triggerAction({ matches: /^price/i }); 
 
+bot.dialog('loc2', function (session) {
+    // reset data
+      
+    session.endConversation('Our address is 201 N Goodwin Ave, Urbana, IL 61801.');
+ 
+}).triggerAction({ matches: /^(location|where are you|place)/i }); 
+
+bot.dialog('swear2', function (session) {
+    // reset data
+        session.send('Please use appropriate language');
+        session.endDialog();
+ 
+}).triggerAction({ matches: /^(fuck|fuck you|shit)/i }); 
 
 //
 
@@ -68,9 +85,9 @@ dialog.matches('greeting', [
   function (session) {
     builder.Prompts.choice(
       session,
-      'Welcome to HairGuru! Would you like to make a reservation for a haircut?',
+      'Welcome to HairGuru!Would you like to make a reservation for a haircut?',
       "Yes|No",
-      {listStyle:3},
+      {listStyle: 2},
       {
         maxRetries:2,
         retryPrompt: 'That is not a valid option'
@@ -141,7 +158,7 @@ calendarAPI.listEventsAPI(function(events) {
 
       // give the user choice of available timeslot
       builder.Prompts.choice(session, "These are the available timeslots on " +  
-        days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble, {listStyle:3});
+        days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble, {listStyle:2});
     });
   }, function (session, results) {
 
@@ -161,7 +178,7 @@ calendarAPI.listEventsAPI(function(events) {
 dialog.matches('reservation', [
   function (session, args, next) {
     // begin reservation process
-    builder.Prompts.time(session, 'Which day would you like to make the reservation for? (Mon~Sun)');
+    builder.Prompts.time(session, 'Which day would you like to make the reservation for? (Mon~Sun) - Type ');
   }, function (session, results, next) {
     // get user's preferred day, and get available timeslots on that day
     var inputDate = builder.EntityRecognizer.resolveTime([results.response]);
@@ -192,7 +209,7 @@ dialog.matches('reservation', [
 
       // give the user choice of available timeslot
       builder.Prompts.choice(session, "These are the available timeslots on " +  
-        days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble, {listStyle:3});
+        days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble, {listStyle:2});
     });
   }, function (session, results) {
     // create an event in the Google Calendar for user's chosen timeslot.
