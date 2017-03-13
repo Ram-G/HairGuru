@@ -159,6 +159,7 @@ calendarAPI.listEventsAPI(function(events) {
       // give the user choice of available timeslot
       builder.Prompts.choice(session, "These are the available timeslots on " +  
         days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble, {listStyle:2});
+        session.send("or type exit to cancel");
     });
   }, function (session, results) {
 
@@ -210,6 +211,7 @@ dialog.matches('reservation', [
       // give the user choice of available timeslot
       builder.Prompts.choice(session, "These are the available timeslots on " +  
         days[inputDate.getDay()] + ". What's good for you? (24 hr format)", avble, {listStyle:2});
+        session.send("or type exit to cancel");
     });
   }, function (session, results) {
     // create an event in the Google Calendar for user's chosen timeslot.
